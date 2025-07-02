@@ -1,20 +1,18 @@
-import { useState, useEffect, useMemo } from "react";
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import Icon from "@mui/material/Icon";
-import PropTypes from "prop-types";
-import SoftBox from "components/SoftBox";
-import Sidenav from "examples/Sidenav";
-import Configurator from "examples/Configurator";
-import theme from "assets/theme";
-import rtlPlugin from "stylis-plugin-rtl";
-import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
-import routes from "routes";
-import { useSoftUIController, setMiniSidenav, setOpenConfigurator } from "context";
+import { CacheProvider } from "@emotion/react";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
 import brand from "assets/images/logo.png";
+import theme from "assets/theme";
+import { setMiniSidenav, setOpenConfigurator, useSoftUIController } from "context";
+import Configurator from "examples/Configurator";
+import Sidenav from "examples/Sidenav";
+import PropTypes from "prop-types";
+import { useEffect, useMemo, useState } from "react";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import routes from "routes";
 import authService from "services/authService";
+import rtlPlugin from "stylis-plugin-rtl";
 
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
@@ -144,27 +142,31 @@ export default function App() {
   // );
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      {layout === "dashboard" && (
-        <>
-          <Sidenav
-            color={sidenavColor}
-            brand={brand}
-            brandName="HealthMate"
-            routes={routes}
-            onMouseEnter={handleOnMouseEnter}
-            onMouseLeave={handleOnMouseLeave}
-          />
-          <Configurator />
-        </>
-      )}
-      {layout === "vr" && <Configurator />}
-      <Routes>
-        {getRoutes(routes)}
-        <Route path="/" element={<Navigate to="/dang-nhap" replace />} />
-        <Route path="*" element={<Navigate to="/dang-nhap" replace />} />
-      </Routes>
-    </ThemeProvider>
-  );
+  <CacheProvider value={rtlCache}>
+    <BrowserRouter basename="/ExeFE">
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {layout === "dashboard" && (
+          <>
+            <Sidenav
+              color={sidenavColor}
+              brand={brand}
+              brandName="HealthMate"
+              routes={routes}
+              onMouseEnter={handleOnMouseEnter}
+              onMouseLeave={handleOnMouseLeave}
+            />
+            <Configurator />
+          </>
+        )}
+        {layout === "vr" && <Configurator />}
+        <Routes>
+          {getRoutes(routes)}
+          <Route path="/" element={<Navigate to="/dang-nhap" replace />} />
+          <Route path="*" element={<Navigate to="/dang-nhap" replace />} />
+        </Routes>
+      </ThemeProvider>
+    </BrowserRouter>
+  </CacheProvider>
+);
 }
